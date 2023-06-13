@@ -8,12 +8,17 @@ import streamlit_authenticator as stauth
 from yaml.loader import SafeLoader
 import yaml
 import pyperclip
+import os
+import json
 
 # Define the scope
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 
-# Add your service account file
-creds = ServiceAccountCredentials.from_json_keyfile_name('C:\\Users\\mpatel\\PycharmProjects\\SQLtraining\\sqlkey\\sqlkey.json', scope)
+# Get the credentials from the environment variables
+creds_json = json.loads(os.getenv("GOOGLE_SHEETS_API_CREDENTIALS"))
+
+# Create the credentials object
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
 
 # Authorize the clientsheet
 client = gspread.authorize(creds)
@@ -85,50 +90,43 @@ def app():
             authenticator.logout()
             st.write('You have been logged out.')
 
-            # Sidebar for adding a new snippet
-            with st.sidebar:
-                st.subheader('Add a new SQL Snippet')
-                new_snippet_title = st.text_input('Title')
-                new_snippet_description = st.text_area('Description')
-                new_snippet_code = st.text_area('Code')
-                new_snippet_category_id = st.text_input('Category')
-                if st.button('Add Snippet'):
-                    add_snippet(new_snippet_title, new_snippet_description, new_snippet_code, new_snippet_category_id,
-                                username)
-                    st.success('Snippet added successfully.')
+        # Sidebar for adding a new snippet
+        with st.sidebar:
+            st.subheader('Add a new SQL Snippet')
+            new_snippet_title = st.text_input('Title')
+            new_snippet_description = st.text_area('Description')
+            new_snippet_code = st.text_area('Code')
+            new_snippet_category_id = st.text_input('Category')
+            if st.button('Add Snippet'):
+                add_snippet(new_snippet_title, new_snippet_description, new_snippet_code, new_snippet_category_id, username)
+                st.success('Snippet added successfully!')
 
-            # Main section
-            search_query = st.text_input('Search snippets')
-            snippets = get_snippets(search_query)
+        # Search bar
+        search_query = st.text_input('Search snippets')
+        snippets = get_snippets(search_query)
 
-            for index, snippet in snippets.iterrows():
-                st.subheader(snippet['title'])  # title
-                st.text(snippet['description'])  # description
-                st.code(snippet['code'], language='sql')  # code
-                if st.button('Copy to clipboard', key=str(index) + 'copy'):
-                    pyperclip.copy(snippet['code'])
-                    st.success('Copied to clipboard.')
+        # Display snippets
+        for index, snippet in snippets.iterrows():
+            with st.beta_expander(snippet['title']):
+                st.write(snippet['description'])
+                st.code(snippet['code'])
+                st.write('Category: ', snippet['category_id'])
+                st.write('Contributor: ', snippet['user_id'])
 
-                # Editing a snippet
-                if st.button('Edit Snippet', key=str(index) + 'edit'):
-                    new_title = st.text_input('New Title', value=snippet['title'])
-                    new_description = st.text_input('New Description', value=snippet['description'])
-                    new_code = st.text_input('New Code', value=snippet['code'])
-                    new_category_id = st.text_input('New Category ID', value=snippet['category_id'])
-                    if st.button('Save Changes', key=str(index) + 'save'):
-                        edit_snippet(index, new_title, new_description, new_code, new_category_id)
-                        st.success('Snippet edited successfully.')
+                # Buttons for editing and deleting the snippet
+                if st.button('Edit', key=f'edit_{index}'):
+                    title = st.text_input('Title', value=snippet['title'])
+                    description = st.text_area('Description', value=snippet['description'])
+                    code = st.text_area('Code', value=snippet['code'])
+                    category_id = st.text_input('Category', value=snippet['category_id'])
+                    if st.button('Save Changes', key=f'save_{index}'):
+                        edit_snippet(index, title, description, code, category_id)
+                        st.success('Changes saved successfully!')
 
-                # Deleting a snippet
-                if st.button('Delete Snippet', key=str(index) + 'delete'):
+                if st.button('Delete', key=f'delete_{index}'):
                     delete_snippet(index)
-                    st.success('Snippet deleted successfully.')
+                    st.success('Snippet deleted successfully!')
 
-        elif authentication_status is False:
-            st.error('Username/password is incorrect')
-        elif authentication_status is None:
-            st.warning('Please enter your username and password')
-
-    if __name__ == "__main__":
-        app()
-
+# Run the app
+if __name__ == '__main__':
+    app()

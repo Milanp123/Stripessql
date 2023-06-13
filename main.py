@@ -13,7 +13,7 @@ import pyperclip
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 
 # Add your service account file
-creds_json = json.loads(st.secrets["service_account"]["GOOGLE_SHEETS_API_CREDENTIALS"])
+creds_json = json.loads(st.secrets["gcp_service_account"]["GOOGLE_SHEETS_API_CREDENTIALS"])
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
 
 # Authorize the clientsheet

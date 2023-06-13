@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "sqltraining-389720",
+  "private_key_id": "e25190bd2d5f3f964eff5e9a3b419c0c55940bc8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCFMI3vxIWEBQFQ\nsdFwF9jQy+q2ynii5O0EE8BNDBYQRCA5HWH208w0eWZIrDS/yvW1zScRGfW9of4O\n8b/HPF15789jtYvHOO14hhpCPFRCyC+SiOmFLhST+8lrejYO5aie51vvLm+iclD7\nxezWCrdJav5X30bxhHXoGoOAMP774yQn8HCaqNz30+f+qQh1m248PI+PQjCbm4SN\n8tflxjUFz2LvpHwVDww7VIUkP6a8MQJMByCHT78/e+7Ov398GYIUmYtq6caxdUX2\nSEElgchkVVz3vXc/D4HOWXEsPWL27iy/RuS6qwploU1Ncnk4CBpLrl53y79zXLOo\ntyXK23OnAgMBAAECggEADArTUoH0xnaDY23ob1egoWRGkQdmd+f17B/zC6RTnF3k\ngfV/pYcJ2Ba/4kM7s7mglLL7XMb5mo86ftRp0BRLqVo+6JeCD128zuBlIGb/AVjD\nQF8Dqih78NNbp02R9K/cGp31iH8s1cW7P8BqBQJMByXW4FAORIkC9hzrldwYOeLy\nvXR/vJi4krZxakOZyuiYgMYfIAY+j5VvBeOxetjyO72MxeupbvgSqvRQ1KB1M8uH\nTfg4mLUZNW7Jz6t5/qk+yc3OO6sBOXmnLZhckN12eQmPudDMqcno8EGIHCV73aJq\nh45dtu9H4u56QJHmB0CI8YuYeuon5FMAD+UCJvahwQKBgQC7TW+opmC75HFKVMgW\nJeeks4SnWIhh1nVDrEMY89U7QhBsF05nPwGKYx2icVbg7/5E55DwHoA7YOQQlV6y\nJSpIKCeFhjM+tNwsrvJjZhzmhbIT7DgxpPwUOnI7eHlJDdnQJlREXwdKgcjyxEWV\nXH+wSeJjZ1RwmGxAnO/xp//dwQKBgQC2CkD2OHrMksTVJibYwZyy8chvx2AdRw+3\n6e3QEsdjoDL8T8CgZes4Oa5qjbLtZ2q/kwMMyqK3lQ/KElpxsympIFQJ2P6kTqVi\nJs1AQzScHkZHfrh37f6ovLs8HDSaAKgAURsCdY/MJoj1wzZTYT5mEnMs9qV1Ebm3\nSjQd3b37ZwKBgDPObFb6hgESY5+KqbkujM7KdKOQ4lAlcFPifsCVGOKGGGK9Y4s9\nKyDq31SCAuS+nNbUMguodBF4cDyCBCpEC1jf+mZ9QwlSHyAg15xUryO30RSfnr9k\ngfDaZaQ7Y1iogxmGsIIkwrCCC2HSleiFKDBLj1mtR/bIwhBxGBEARc5BAoGBAJPm\nVM03Kh4XiLAcpScqdqO0aULX27Et0Ql9l+ebuj+pIoN4UGqBI9C0nI6ZvavAgCxR\nxwKXiAhbpU5qBu2lwM1WJLEzif/4ncnW+J+jepT0y+i+fiWCSYrSe9TknaAZtGU9\ngBJJbaFSFaiHCBZKRaYsi0MWyWsKEbdnJFy3kek1AoGASSbUF1zSA2cTzAmBI0Pb\nBffcmsPOgM7nlAM7ORjqE8loq1wDR87mRyaRLMicPsve7vO/bMskxlfORZmNNVbo\nsKvu4mqNXrxQvuoHuFxn9lK8epcj5VE6IOKsFj/sWU3SuOnvAhDnKkPL3tkBT3ha\nvQdydl8SCksrnWBfMHkjgSI=\n-----END PRIVATE KEY-----\n",
+  "client_email": "stripessql@sqltraining-389720.iam.gserviceaccount.com",
+  "client_id": "106701231577519055756",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/stripessql%40sqltraining-389720.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

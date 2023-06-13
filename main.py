@@ -6,13 +6,19 @@ from oauth2client.service_account import ServiceAccountCredentials
 import streamlit as st
 from yaml.loader import SafeLoader
 import yaml
+import json
 import pyperclip
 
 # Define the scope
 scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 
 # Add your service account file
+<<<<<<< HEAD
+creds_json = json.loads(st.secrets["service_account"]["GOOGLE_SHEETS_API_CREDENTIALS"])
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
+=======
 creds = ServiceAccountCredentials.from_json_keyfile_name(st.secrets['service_account'], scope)
+>>>>>>> dbd3a0749447fd79c7bb3fe8b334209df9a98e4a
 
 # Authorize the clientsheet
 client = gspread.authorize(creds)

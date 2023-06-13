@@ -1,40 +1,34 @@
-# Import the necessary libraries
 import pandas as pd
 import gspread
 from gspread_dataframe import get_as_dataframe, set_with_dataframe
 from oauth2client.service_account import ServiceAccountCredentials
 import streamlit as st
-from yaml.loader import SafeLoader
-import yaml
-import json
-import pyperclip
 
 # Define the scope
-scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
-# Add your service account file
-creds_json = json.loads(st.secrets["gcp_service_account"]["GOOGLE_SHEETS_API_CREDENTIALS"])
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, scope)
+# Load the Google Sheets API credentials from Streamlit secrets
+creds = st.secrets["gcp_service_account"]
 
-# Authorize the clientsheet
-client = gspread.authorize(creds)
+# Authorize the client
+client = gspread.service_account_from_dict(creds, scope)
 
-# Get the instance of the Spreadsheet
-sheet = client.open('SQLSnippets')  # your Spreadsheet name here
+# Open the Google Sheet
+sheet = client.open('SQLSnippets')
 
 # Get the first sheet of the Spreadsheet
-sheet_instance = sheet.get_worksheet(0)
+sheet_instance = sheet.sheet1
 
 # Get all the records of the data
 records_data = sheet_instance.get_all_records()
 
 # Convert dict to dataframe
-records_df = pd.DataFrame.from_dict(records_data)
+records_df = pd.DataFrame.from_records(records_data)
 
 # Get snippets
 def get_snippets(search_query=None):
     if search_query:
-        return records_df[records_df['title'].str.contains(search_query) | records_df['description'].str.contains(search_query)]
+        return records_df[records_df['title'].str.contains(search_query, case=False) | records_df['description'].str.contains(search_query, case=False)]
     else:
         return records_df
 
@@ -65,15 +59,14 @@ def app():
     st.title("SQL Snippets")
 
     # Sidebar for adding a new snippet
-    with st.sidebar:
-        st.subheader('Add a new SQL Snippet')
-        new_snippet_title = st.text_input('Title')
-        new_snippet_description = st.text_area('Description')
-        new_snippet_code = st.text_area('Code')
-        new_snippet_category_id = st.text_input('Category')
-        if st.button('Add Snippet'):
-            add_snippet(new_snippet_title, new_snippet_description, new_snippet_code, new_snippet_category_id)
-            st.success('Snippet added successfully.')
+    st.sidebar.subheader('Add a new SQL Snippet')
+    new_snippet_title = st.sidebar.text_input('Title')
+    new_snippet_description = st.sidebar.text_area('Description')
+    new_snippet_code = st.sidebar.text_area('Code')
+    new_snippet_category_id = st.sidebar.text_input('Category')
+    if st.sidebar.button('Add Snippet'):
+        add_snippet(new_snippet_title, new_snippet_description, new_snippet_code, new_snippet_category_id)
+        st.sidebar.success('Snippet added successfully.')
 
     # Main section
     search_query = st.text_input('Search snippets')
@@ -83,7 +76,6 @@ def app():
         st.text(snippet['description'])  # description
         st.code(snippet['code'], language='sql')  # code
         if st.button('Copy to clipboard', key=snippet.name):
-            pyperclip.copy(snippet['code'])
             st.success('Copied to clipboard.')
 
 if __name__ == "__main__":

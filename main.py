@@ -32,7 +32,7 @@ def fetch_data():
 df = fetch_data()
 
 # Your app title on the sidebar
-st.sidebar.title("SQL Snippet Manager")
+st.sidebar.title("SONAR SQL Queries")
 
 # Set up filters
 st.sidebar.header("Filters")

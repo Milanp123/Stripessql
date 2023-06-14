@@ -32,7 +32,7 @@ def fetch_data():
 df = fetch_data()
 
 # Your app title on the sidebar
-st.sidebar.title("SONAR SQL Queries")
+st.sidebar.title("SQL Snippet Manager")
 
 # Set up filters
 st.sidebar.header("Filters")
@@ -52,6 +52,6 @@ for idx, row in df_searched.iterrows():
     with st.container():
         cols = st.columns(2)
         cols[0].subheader(row['title'])
-        cols[0].write("Description: ", row['description'])
+        cols[0].write("Description: " + row['description'])
         cols[0].code(row['code'])
         cols[0].write("---")

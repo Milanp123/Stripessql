@@ -1,45 +1,56 @@
+import streamlit as st
 import pandas as pd
 import gspread
-import streamlit as st
+from oauth2client.service_account import ServiceAccountCredentials
 
-# Authenticate and open the Google Sheet
-gc = gspread.service_account()
-sheet_url = 'https://docs.google.com/spreadsheets/d/1f65SYuwx77ZWheN1TYocAH_yEr-SSH33sqHwapPMLQM/edit#gid=0'  # Replace with your Google Sheet URL
-sheet = gc.open_by_url(sheet_url)
-worksheet = sheet.get_worksheet(0)  # Assuming the data is on the first sheet
+def fetch_data():
+    # Use your service account
+    scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
 
-# Get all the records from the sheet
-records_data = worksheet.get_all_values()
-headers = records_data[0]
-records_data = records_data[1:]
+    # Use secrets management for credentials
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
 
-# Convert records to DataFrame
-records_df = pd.DataFrame(records_data, columns=headers)
+    client = gspread.authorize(creds)
 
-# Search snippets
-def search_snippets(search_query):
-    return records_df[records_df['title'].str.contains(search_query, case=False) | records_df['description'].str.contains(search_query, case=False)]
+    # Open the google spreadsheet
+    sheet = client.open_by_url('https://docs.google.com/spreadsheets/d/1f65SYuwx77ZWheN1TYocAH_yEr-SSH33sqHwapPMLQM/edit?usp=sharing')
 
-# Streamlit app
-def app():
-    st.title("SQL Snippets")
+    # Get the first sheet of the Spreadsheet
+    worksheet = sheet.get_worksheet(0)
 
-    # Search snippets
-    search_query = st.text_input('Search snippets')
-    search_results = search_snippets(search_query)
+    # Get all values from the worksheet
+    data = worksheet.get_all_values()
 
-    if search_query:
-        st.subheader(f"Search results for '{search_query}':")
-        for index, snippet in search_results.iterrows():
-            st.subheader(snippet['title'])  # title
-            st.text(snippet['description'])  # description
-            st.code(snippet['code'], language='sql')  # code
-    else:
-        st.subheader("All snippets:")
-        for index, snippet in records_df.iterrows():
-            st.subheader(snippet['title'])  # title
-            st.text(snippet['description'])  # description
-            st.code(snippet['code'], language='sql')  # code
+    # Get the data into pandas
+    df = pd.DataFrame(data)
 
-if __name__ == "__main__":
-    app()
+    # Set the headers as the first row
+    headers = df.iloc[0]
+    df = pd.DataFrame(df.values[1:], columns=headers)
+    return df
+
+df = fetch_data()
+
+# Your app title
+st.title("SQL Snippet Manager")
+
+# Add a search box
+search_term = st.text_input("Search snippets")
+
+# Filter the dataframe based on the search term
+df_searched = df[df['title'].str.contains(search_term, case=False) | df['description'].str.contains(search_term, case=False)]
+
+# Display category options
+categories = df_searched['category_id'].unique().tolist()
+selected_category = st.selectbox("Select a category", categories)
+
+# Display snippets in the selected category
+df_filtered = df_searched[df_searched['category_id'] == selected_category]
+snippet = st.selectbox("Select a snippet", df_filtered['title'].tolist())
+
+# Display the code and description for the selected snippet
+selected_snippet = df_filtered[df_filtered['title'] == snippet]
+
+st.write("Description: ", selected_snippet['description'].values[0])
+code = selected_snippet['code'].values[0]
+st.code(code)

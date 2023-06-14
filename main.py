@@ -52,7 +52,7 @@ num_entries = len(df_searched)
 num_cols = max(1, int(num_entries ** 0.5))
 
 # Create columns
-cols = st.beta_columns(num_cols)
+cols = st.columns(num_cols)
 
 # Display snippets
 i = 0

@@ -47,19 +47,11 @@ df_searched = df[df['title'].str.contains(search_term, case=False) | df['descrip
 if selected_category != 'All':
     df_searched = df_searched[df_searched['category_id'] == selected_category]
 
-# Define number of columns based on number of entries
-num_entries = len(df_searched)
-num_cols = max(1, int(num_entries ** 0.5))
-
-# Create columns
-cols = st.columns(num_cols)
-
 # Display snippets
-i = 0
 for idx, row in df_searched.iterrows():
-    with cols[i % num_cols]:
-        st.subheader(row['title'])
-        st.write("Description: ", row['description'])
-        st.code(row['code'])
-        st.write("---")
-    i += 1
+    with st.container():
+        cols = st.columns(2)
+        cols[0].subheader(row['title'])
+        cols[0].write("Description: ", row['description'])
+        cols[0].code(row['code'])
+        cols[0].write("---")

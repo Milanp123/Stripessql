@@ -5,7 +5,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 
 def fetch_data():
     # Use your service account
-    scope = ['https://spreadsheets.google.com/feeds','https://www.googleapis.com/auth/drive']
+    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
 
     # Use secrets management for credentials
     creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
@@ -34,23 +34,22 @@ df = fetch_data()
 # Your app title
 st.title("SQL Snippet Manager")
 
-# Add a search box
-search_term = st.text_input("Search snippets")
+# Set up filters
+st.sidebar.header("Filters")
+# Search box
+search_term = st.sidebar.text_input("Search snippets")
+# Category selection
+categories = df['category_id'].unique().tolist()
+selected_category = st.sidebar.selectbox("Select a category", ['All'] + categories)
 
-# Filter the dataframe based on the search term
+# Filter dataframe based on search term and category
 df_searched = df[df['title'].str.contains(search_term, case=False) | df['description'].str.contains(search_term, case=False)]
+if selected_category != 'All':
+    df_searched = df_searched[df_searched['category_id'] == selected_category]
 
-# Display category options
-categories = df_searched['category_id'].unique().tolist()
-selected_category = st.selectbox("Select a category", categories)
-
-# Display snippets in the selected category
-df_filtered = df_searched[df_searched['category_id'] == selected_category]
-snippet = st.selectbox("Select a snippet", df_filtered['title'].tolist())
-
-# Display the code and description for the selected snippet
-selected_snippet = df_filtered[df_filtered['title'] == snippet]
-
-st.write("Description: ", selected_snippet['description'].values[0])
-code = selected_snippet['code'].values[0]
-st.code(code)
+# Display snippets
+for idx, row in df_searched.iterrows():
+    st.subheader(row['title'])
+    st.write("Description: ", row['description'])
+    st.code(row['code'])
+    st.write("---")

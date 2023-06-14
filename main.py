@@ -31,8 +31,8 @@ def fetch_data():
 
 df = fetch_data()
 
-# Your app title
-st.title("SQL Snippet Manager")
+# Your app title on the sidebar
+st.sidebar.title("SQL Snippet Manager")
 
 # Set up filters
 st.sidebar.header("Filters")
@@ -47,9 +47,19 @@ df_searched = df[df['title'].str.contains(search_term, case=False) | df['descrip
 if selected_category != 'All':
     df_searched = df_searched[df_searched['category_id'] == selected_category]
 
+# Define number of columns based on number of entries
+num_entries = len(df_searched)
+num_cols = max(1, int(num_entries ** 0.5))
+
+# Create columns
+cols = st.beta_columns(num_cols)
+
 # Display snippets
+i = 0
 for idx, row in df_searched.iterrows():
-    st.subheader(row['title'])
-    st.write("Description: ", row['description'])
-    st.code(row['code'])
-    st.write("---")
+    with cols[i % num_cols]:
+        st.subheader(row['title'])
+        st.write("Description: ", row['description'])
+        st.code(row['code'])
+        st.write("---")
+    i += 1

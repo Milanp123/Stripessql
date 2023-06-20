@@ -4,17 +4,6 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 
-st.markdown(
-    """
-    <style>
-        .reportview-container .main .block-container {
-            max-width: 100%;
-        }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
 def fetch_data():
     # Use your service account
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']

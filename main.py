@@ -43,6 +43,11 @@ search_term = st.sidebar.text_input("Search snippets")
 categories = df['category_id'].unique().tolist()
 selected_category = st.sidebar.selectbox("Select a category", ['All'] + categories)
 
+clear_filters = st.sidebar.button("Clear all filters")
+if clear_filters:
+    search_term = ''
+    selected_category = 'All'
+
 # Filter dataframe based on search term and category
 df_searched = df[df['title'].str.contains(search_term, case=False) | df['description'].str.contains(search_term, case=False)]
 if selected_category != 'All':
